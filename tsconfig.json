@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext", "DOM"],
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "incremental": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "target": "ES2022",
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "jsx": "preserve",
+    "strictNullChecks": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

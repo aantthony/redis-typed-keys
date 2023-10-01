@@ -1,0 +1,38 @@
+{
+  "name": "tredis",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "main": "dist/bundle.js",
+  "module": "dist/bundle.js",
+  "types": "src/index.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/bundle.js"
+    }
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "format": "prettier . --write"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "prettier": "^3.0.3",
+    "redis": "^4.6.10",
+    "rollup": "^3.29.4",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.2.2"
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "arrowParens": "avoid",
+    "printWidth": 100
+  }
+}
