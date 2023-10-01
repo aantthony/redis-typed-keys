@@ -10,7 +10,10 @@ function transformReply(r: UpstashReply): RedisReply {
   return r.result;
 }
 
-export function createRestAdapater(config: { url?: string; token?: string }): RedisAdapter {
+export function createRestAdapater(config: {
+  url?: string;
+  token?: string;
+}): RedisAdapter {
   if (!config.url) throw new Error('Missing url');
   if (!config.token) throw new Error('Missing token');
 

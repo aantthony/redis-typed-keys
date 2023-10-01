@@ -43,7 +43,11 @@ export class RedisSorted<K extends string> extends RedisKey {
     }
 
     if (options.limit) {
-      args.push('LIMIT', options.limit.offset.toString(), options.limit.count.toString());
+      args.push(
+        'LIMIT',
+        options.limit.offset.toString(),
+        options.limit.count.toString(),
+      );
     }
 
     return this.op<K[]>('ZRANGE', args);
@@ -88,7 +92,11 @@ export class RedisSorted<K extends string> extends RedisKey {
     }
 
     if (options.limit) {
-      args.push('LIMIT', options.limit.offset.toString(), options.limit.count.toString());
+      args.push(
+        'LIMIT',
+        options.limit.offset.toString(),
+        options.limit.count.toString(),
+      );
     }
 
     args.push('WITHSCORES');

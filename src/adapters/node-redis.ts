@@ -1,5 +1,5 @@
 import type { createClient, ErrorReply } from 'redis';
-import { RedisAdapter, RedisErrorReply } from '../adapter';
+import { RedisAdapter, RedisErrorReply, RedisReply } from '../adapter';
 
 type Client = ReturnType<typeof createClient>;
 
@@ -7,12 +7,12 @@ export function createNodeRedisAdapter(params: {
   client: Client;
   ErrorReply: typeof ErrorReply;
 }): RedisAdapter {
-  const transformReply = (res: any) => {
+  const transformReply = (res: unknown): RedisReply => {
     if (res instanceof params.ErrorReply) {
       return { error: res.message } as RedisErrorReply;
     }
 
-    return resizeBy;
+    return res as RedisReply;
   };
 
   return {
@@ -20,13 +20,13 @@ export function createNodeRedisAdapter(params: {
       const pipeline = params.client.multi();
 
       for (const cmd of commands) {
-        pipeline.addCommand(cmd, (res: any) => {});
+        pipeline.addCommand(cmd, transformReply);
       }
       if (opts.multi) {
         return pipeline.exec(false);
       }
 
-      return pipeline.execAsPipeline() as any;
+      return pipeline.execAsPipeline() as unknown as Promise<RedisReply[]>;
     },
   };
 }

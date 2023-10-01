@@ -8,7 +8,8 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
   public constructor(
     private readonly adapter: RedisAdapter,
     private readonly commands: RedisArg[][],
-    private readonly transform: (replies: RedisReply[]) => Returned = value => value as Returned,
+    private readonly transform: (replies: RedisReply[]) => Returned = value =>
+      value as Returned,
   ) {}
 
   wantsMulti = false;
@@ -30,59 +31,43 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
     return this._promise;
   }
 
-  then<TResult1 = Returned, TResult2 = never>(
-    onFullfilled?: ((value: Returned) => TResult1 | PromiseLike<TResult1>) | null | undefined,
-    onRejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null | undefined,
-  ) {
+  then: Promise<Returned>['then'] = (onFullfilled, onRejected) => {
     return this.toPromise().then(onFullfilled, onRejected);
-  }
+  };
 
-  catch<TResult = never>(
-    onRejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null | undefined,
-  ) {
+  catch: Promise<Returned>['catch'] = onRejected => {
     return this.toPromise().catch(onRejected);
-  }
+  };
 
-  finally(onFinally?: (() => void) | null | undefined) {
+  finally: Promise<Returned>['finally'] = onFinally => {
     return this.toPromise().finally(onFinally);
-  }
+  };
 
   static pipeline<P extends (null | undefined | RedisPromise)[]>(
     promises: [...P],
   ): RedisPromise<InferCmdResponses<P>> {
-    const first = promises[0];
-
-    if (!first) return [] as any;
-
-    const adapter = first.adapter;
-    const commands: RedisArg[][] = [];
-
-    for (const p of promises) {
-      if (!p) {
-        commands.push([]);
-      } else {
-        commands.push(p.commands[0]);
-      }
+    const first = promises.find(p => !!p);
+    if (!first) {
+      throw new Error('no promises provided to pipeline');
     }
 
-    const transform = (value: any) => {
-      const responses: any[] = [];
+    const adapter = first.adapter;
+    const commands = promises.flatMap(p => (p ? p.commands : []));
+
+    const transform = (flatReplies: RedisReply[]): InferCmdResponses<P> => {
       let i = 0;
-      for (const p of promises) {
-        if (!p) {
-          responses.push(value[i]);
-          i++;
-        } else {
-          responses.push(p.transform(value[i]));
-          i++;
-        }
-      }
-      return responses;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return promises.map(p => {
+        if (!p) return undefined;
+
+        const relevantReplies = flatReplies.slice(i, i + p.commands.length);
+        i += p.commands.length;
+
+        return p.transform(relevantReplies);
+      }) as InferCmdResponses<P>;
     };
 
-    const p = new RedisPromise(adapter, commands, transform);
-
-    return p as any;
+    return new RedisPromise(adapter, commands, transform);
   }
 
   static multi<P extends (null | undefined | RedisPromise)[]>(

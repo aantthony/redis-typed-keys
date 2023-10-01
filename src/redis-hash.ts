@@ -3,7 +3,9 @@ import { AllStrings } from './common-types';
 import { decodeFieldValues } from './decode-field-values';
 import { RedisKey } from './key';
 
-export class RedisHash<T extends AllStrings<T> = Record<string, string>> extends RedisKey {
+export class RedisHash<
+  T extends AllStrings<T> = Record<string, string>,
+> extends RedisKey {
   hgetall() {
     return this.op<string[], T>('hgetall', [], decodeFieldValues);
   }
@@ -22,7 +24,10 @@ export class RedisHash<T extends AllStrings<T> = Record<string, string>> extends
   }
 
   hincrby<K extends keyof T>(field: K, increment: number) {
-    return this.op<number, number>('hincrby', [field as string, increment.toString()]);
+    return this.op<number, number>('hincrby', [
+      field as string,
+      increment.toString(),
+    ]);
   }
 
   hset(obj: Partial<T>) {

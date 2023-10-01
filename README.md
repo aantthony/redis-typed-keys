@@ -51,7 +51,10 @@ async function main() {
   const next = await rdb.counter.incr();
 
   // multi:
-  const [userRes, counterRes] = multi([rdb.user('123').set({ name: 'John' }), rdb.counter.incr()]);
+  const [userRes, counterRes] = multi([
+    rdb.user('123').set({ name: 'John' }),
+    rdb.counter.incr(),
+  ]);
 
   console.log(`Counter is now ${counterRes}`);
 }

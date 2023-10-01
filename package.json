@@ -1,7 +1,7 @@
 {
-  "name": "tredis",
+  "name": "redis-typed-keys",
   "version": "0.0.1",
-  "description": "",
+  "description": "Typed Redis.",
   "type": "module",
   "main": "dist/bundle.js",
   "module": "dist/bundle.js",
@@ -15,13 +15,16 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "format": "prettier . --write"
+    "lint": "prettier . --write && eslint . --ext .ts --fix"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.8.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.3",
+    "@typescript-eslint/parser": "^6.7.3",
+    "eslint": "^8.50.0",
     "prettier": "^3.0.3",
     "redis": "^4.6.10",
     "rollup": "^3.29.4",
@@ -33,6 +36,14 @@
     "singleQuote": true,
     "jsxSingleQuote": true,
     "arrowParens": "avoid",
-    "printWidth": 100
-  }
+    "printWidth": 80
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aantthony/redis-typed-keys.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aantthony/redis-typed-keys/issues"
+  },
+  "homepage": "https://github.com/aantthony/redis-typed-keys#readme"
 }

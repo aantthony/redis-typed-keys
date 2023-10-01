@@ -1,4 +1,3 @@
-import { RedisArg } from './adapter';
 import { RedisKey } from './key';
 import { RedisPromise } from './promise';
 import { RedisValue, serialize } from './serialize';

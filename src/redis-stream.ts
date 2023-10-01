@@ -1,8 +1,7 @@
-import { RedisReply } from './adapter';
 import { AllStrings } from './common-types';
+import { decodeFieldValues } from './decode-field-values';
 import { RedisKey } from './key';
 import { RedisPromise } from './promise';
-import { decodeFieldValues } from './decode-field-values';
 
 export type StreamEntry<Params> = {
   id: string;
@@ -27,7 +26,9 @@ export class RedisStream<T extends AllStrings<T>> extends RedisKey {
      */
     reverse?: boolean;
   }): RedisPromise<StreamEntry<T>[]> {
-    const args = q.reverse ? [q.end ?? '+', q.start ?? '-'] : [q.start ?? '-', q.end ?? '+'];
+    const args = q.reverse
+      ? [q.end ?? '+', q.start ?? '-']
+      : [q.start ?? '-', q.end ?? '+'];
     if (q.count) args.push('COUNT', q.count.toString());
     const cmdName = q.reverse ? 'XREVRANGE' : 'XRANGE';
     return this.op(cmdName, args, (res: [id: string, fields: string[]][]) => {
@@ -42,7 +43,11 @@ export class RedisStream<T extends AllStrings<T>> extends RedisKey {
       });
     });
   }
-  xrevrange(q: { start: string; end: string; count?: number }): RedisPromise<StreamEntry<T>[]> {
+  xrevrange(q: {
+    start: string;
+    end: string;
+    count?: number;
+  }): RedisPromise<StreamEntry<T>[]> {
     return this.xrange({ ...q, reverse: true });
   }
 }
