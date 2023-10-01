@@ -12,7 +12,9 @@ export type StreamEntry<Params> = {
   params: Params;
 };
 
-export class RedisStream<T extends AllStrings<T>> extends RedisKey {
+export class RedisStream<
+  T extends AllStrings<T> = Record<string, string>,
+> extends RedisKey {
   /**
    * Add a new entry to the stream.
    * @link https://redis.io/commands/xadd

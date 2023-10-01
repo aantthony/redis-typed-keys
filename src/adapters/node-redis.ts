@@ -26,7 +26,9 @@ export function createNodeRedisAdapter(params: {
         return pipeline.exec(false);
       }
 
-      return pipeline.execAsPipeline() as unknown as Promise<RedisReply[]>;
+      const res = (await pipeline.execAsPipeline()) as RedisReply[];
+      console.log(JSON.stringify({ commands, res }, null, 2));
+      return res;
     },
   };
 }

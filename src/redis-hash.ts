@@ -1,5 +1,5 @@
 import { RedisArg } from './adapter';
-import { AllStrings } from './common-types';
+import { AllStrings, KeyValuePair } from './common-types';
 import { decodeFieldValues } from './decode-field-values';
 import { RedisKey } from './key';
 
@@ -47,5 +47,30 @@ export class RedisHash<
 
   hlen() {
     return this.op<number>('hlen', []);
+  }
+
+  hscan(options: { cursor?: string; match?: string; count?: number }) {
+    const args: RedisArg[] = [];
+    args.push(options.cursor ?? '0');
+    if (options.match) {
+      args.push('MATCH', options.match);
+    }
+    if (options.count) {
+      args.push('COUNT', options.count.toString());
+    }
+
+    return this.op<
+      [string, string[]],
+      [cursor: string, results: KeyValuePair<T>[]]
+    >('HSCAN', args, reply => {
+      const [cursor, flat] = reply;
+      const pairs: KeyValuePair<T>[] = [];
+
+      for (let i = 0; i < flat.length; i += 2) {
+        pairs.push([flat[i], flat[i + 1]] as KeyValuePair<T>);
+      }
+
+      return [cursor, pairs];
+    });
   }
 }

@@ -8,7 +8,7 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
   public constructor(
     private readonly adapter: RedisAdapter,
     private readonly commands: RedisArg[][],
-    private readonly transform: (replies: RedisReply[]) => Returned = value =>
+    private readonly transformFn: (replies: RedisReply[]) => Returned = value =>
       value as Returned,
   ) {}
 
@@ -25,7 +25,7 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
           multi: this.wantsMulti,
         })
         .then(value => {
-          return this.transform(value);
+          return this.transformFn(value);
         });
     }
     return this._promise;
@@ -63,7 +63,7 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
         const relevantReplies = flatReplies.slice(i, i + p.commands.length);
         i += p.commands.length;
 
-        return p.transform(relevantReplies);
+        return p.transformFn(relevantReplies);
       }) as InferCmdResponses<P>;
     };
 
@@ -76,6 +76,18 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
     const p = RedisPromise.pipeline(promises);
     p.wantsMulti = true;
     return p;
+  }
+
+  /**
+   * Transform the result of this promise.
+   * Does not execute the promise (use `then` for that)
+   * @returns a new redis promise with the transformed result
+   */
+  transform<V>(fn: (res: Returned) => V): RedisPromise<V> {
+    const originalTransform = this.transformFn;
+    return new RedisPromise(this.adapter, this.commands, value => {
+      return fn(originalTransform(value));
+    });
   }
 }
 

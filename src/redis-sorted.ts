@@ -14,7 +14,7 @@ export interface ZRangeOptions {
   limit?: { offset: number; count: number };
 }
 
-export class RedisSorted<K extends string> extends RedisKey {
+export class RedisSorted<K extends string = string> extends RedisKey {
   zadd(
     flags: ('NX' | 'XX' | 'GT' | 'LT' | 'CH' | 'INCR')[],
     entries: Readonly<Readonly<ZMember<K>>[]>,
