@@ -1,6 +1,6 @@
 {
   "name": "redis-typed-keys",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Typed Redis.",
   "type": "module",
   "main": "dist/bundle.js",
