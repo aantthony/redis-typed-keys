@@ -1,4 +1,6 @@
-# tredis
+# redis-typed-keys
+
+<a href="https://www.npmjs.com/package/redis-typed-keys"><img src="https://img.shields.io/npm/v/redis-typed-keys.svg?style=flat" /></a>
 
 Typed Redis.
 
