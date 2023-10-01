@@ -5,11 +5,18 @@ import { RedisPromise } from './promise';
 
 export type StreamEntry<Params> = {
   id: string;
+
   t: Date;
   seq: number;
-} & Params;
+
+  params: Params;
+};
 
 export class RedisStream<T extends AllStrings<T>> extends RedisKey {
+  /**
+   * Add a new entry to the stream.
+   * @link https://redis.io/commands/xadd
+   */
   xadd(id: string | null, fields: T) {
     const args = [id || '*'];
     for (const [k, v] of Object.entries(fields)) {
@@ -38,7 +45,7 @@ export class RedisStream<T extends AllStrings<T>> extends RedisKey {
           id,
           t: new Date(parseInt(sT)),
           seq: parseInt(sSeq),
-          ...decodeFieldValues(fields),
+          params: decodeFieldValues<T>(fields),
         };
       });
     });

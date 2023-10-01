@@ -14,13 +14,12 @@ export class RedisHash<
     return this.op<T[K] | null>('hget', [field as string]);
   }
 
-  hmget<K extends keyof T>(...fields: K[]) {
-    return this.op<
-      string[],
-      {
-        [K in keyof K]: K extends keyof T ? T[K] : never;
-      }
-    >('hmget', fields as string[], decodeFieldValues);
+  hmget<Fields extends (keyof T)[]>(...fields: Fields) {
+    return this.op<string[], Pick<T, Fields[number]>>(
+      'hmget',
+      fields as string[],
+      decodeFieldValues as (res: string[]) => Pick<T, Fields[number]>,
+    );
   }
 
   hincrby<K extends keyof T>(field: K, increment: number) {
