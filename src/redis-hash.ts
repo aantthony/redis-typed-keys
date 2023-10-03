@@ -32,7 +32,7 @@ export class RedisHash<
   hset(obj: Partial<T>) {
     const args: RedisArg[] = [];
     for (const [k, v] of Object.entries(obj)) {
-      if (v) args.push(k, v as string);
+      if (v !== undefined) args.push(k, v as string);
     }
     return this.op<'OK'>('hset', args);
   }
