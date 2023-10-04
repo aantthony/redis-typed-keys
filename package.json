@@ -5,11 +5,11 @@
   "type": "module",
   "main": "dist/bundle.js",
   "module": "dist/bundle.js",
-  "types": "src/index.ts",
+  "types": "dist/index.d.ts",
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/bundle.js"
     }
   },
@@ -27,7 +27,6 @@
     "eslint": "^8.50.0",
     "eslint-config-prettier": "^9.0.0",
     "prettier": "^3.0.3",
-    "redis": "^4.6.10",
     "rollup": "^3.29.4",
     "rollup-plugin-typescript2": "^0.36.0",
     "typescript": "^5.2.2"

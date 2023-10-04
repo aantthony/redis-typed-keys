@@ -1,15 +1,12 @@
-import type { createClient, ErrorReply } from 'redis';
 import { RedisAdapter, RedisErrorReply, RedisReply } from '../adapter';
 
-type Client = ReturnType<typeof createClient>;
-
 export function createNodeRedisAdapter(params: {
-  client: Client;
-  ErrorReply: typeof ErrorReply;
+  client: any;
+  ErrorReply: any;
 }): RedisAdapter {
   const transformReply = (res: unknown): RedisReply => {
     if (res instanceof params.ErrorReply) {
-      return { error: res.message } as RedisErrorReply;
+      return { error: (res as any).message } as RedisErrorReply;
     }
 
     return res as RedisReply;
