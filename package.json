@@ -10,7 +10,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/bundle.js"
+      "import": "./dist/bundle.js",
+      "require": "./dist/bundle.js"
     }
   },
   "scripts": {
