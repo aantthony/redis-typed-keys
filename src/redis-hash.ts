@@ -2,7 +2,7 @@ import type { RedisArg } from './adapter';
 import type { AllStrings, KeyValuePair } from './common-types';
 import { decodeFieldValues } from './decode-field-values';
 import { RedisKey } from './key';
-import type { RedisPromise } from './promise';
+import { RedisPromise } from './promise';
 
 export class RedisHash<
   T extends AllStrings<T> = Record<string, string>,
@@ -41,9 +41,7 @@ export class RedisHash<
     for (const [k, v] of Object.entries(obj)) {
       if (v !== undefined) args.push(k, v as string);
     }
-    if (!args.length) {
-      throw new Error('no args provided to hset');
-    }
+    if (!args.length) return new RedisPromise(this.adapter, [], () => 'OK');
     return this.op('hset', args);
   }
 

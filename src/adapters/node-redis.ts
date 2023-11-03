@@ -20,6 +20,7 @@ export function createNodeRedisAdapter(params: {
       for (const cmd of commands) {
         pipeline.addCommand(cmd, transformReply);
       }
+
       if (opts.multi) {
         return pipeline.exec(false) as Promise<RedisReply[]>;
       }

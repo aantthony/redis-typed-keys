@@ -22,13 +22,15 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
 
   private toPromise(): Promise<Returned> {
     if (this._promise === null) {
-      this._promise = this.adapter
-        .send(this.commands, {
-          multi: this.wantsMulti,
-        })
-        .then((value) => {
-          return this.transformFn(value);
-        });
+      this._promise = (
+        this.commands.length
+          ? this.adapter.send(this.commands, {
+              multi: this.wantsMulti,
+            })
+          : Promise.resolve([])
+      ).then((value) => {
+        return this.transformFn(value);
+      });
     }
     return this._promise;
   }
