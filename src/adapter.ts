@@ -9,15 +9,15 @@ export type RedisReply =
   | Buffer
   | null
   | undefined
-  | Array<RedisReply>;
+  | RedisReply[];
 
 export type RedisArg = string | Buffer;
 
 export interface RedisAdapter {
-  send(
+  send: (
     commands: RedisArg[][],
     opts: {
       multi?: boolean;
     },
-  ): Promise<RedisReply[]>;
+  ) => Promise<RedisReply[]>;
 }

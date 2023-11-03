@@ -1,15 +1,17 @@
-import { RedisAdapter, RedisArg, RedisReply } from './adapter';
+/* eslint-disable @typescript-eslint/unbound-method -- it doesnt use this for static methods */
+import type { RedisAdapter, RedisArg, RedisReply } from './adapter';
 
 export type InferCmdResponses<T extends unknown[]> = {
-  [K in keyof T]: T[K] extends RedisPromise<infer TData> ? TData : void;
+  [K in keyof T]: T[K] extends RedisPromise<infer TData> ? TData : never;
 };
 
 export class RedisPromise<Returned = unknown> implements Promise<Returned> {
   public constructor(
     private readonly adapter: RedisAdapter,
     private readonly commands: RedisArg[][],
-    private readonly transformFn: (replies: RedisReply[]) => Returned = value =>
-      value as Returned,
+    private readonly transformFn: (replies: RedisReply[]) => Returned = (
+      value,
+    ) => value as Returned,
   ) {}
 
   wantsMulti = false;
@@ -24,7 +26,7 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
         .send(this.commands, {
           multi: this.wantsMulti,
         })
-        .then(value => {
+        .then((value) => {
           return this.transformFn(value);
         });
     }
@@ -35,29 +37,29 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
     return this.toPromise().then(onFullfilled, onRejected);
   };
 
-  catch: Promise<Returned>['catch'] = onRejected => {
+  catch: Promise<Returned>['catch'] = (onRejected) => {
     return this.toPromise().catch(onRejected);
   };
 
-  finally: Promise<Returned>['finally'] = onFinally => {
+  finally: Promise<Returned>['finally'] = (onFinally) => {
     return this.toPromise().finally(onFinally);
   };
 
   static pipeline<P extends (null | undefined | RedisPromise)[]>(
     promises: [...P],
   ): RedisPromise<InferCmdResponses<P>> {
-    const first = promises.find(p => !!p);
+    const first = promises.find((p) => Boolean(p));
     if (!first) {
       throw new Error('no promises provided to pipeline');
     }
 
     const adapter = first.adapter;
-    const commands = promises.flatMap(p => (p ? p.commands : []));
+    const commands = promises.flatMap((p) => (p ? p.commands : []));
 
     const transform = (flatReplies: RedisReply[]): InferCmdResponses<P> => {
       let i = 0;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return promises.map(p => {
+
+      return promises.map((p) => {
         if (!p) return undefined;
 
         const relevantReplies = flatReplies.slice(i, i + p.commands.length);
@@ -85,7 +87,7 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
    */
   transform<V>(fn: (res: Returned) => V): RedisPromise<V> {
     const originalTransform = this.transformFn;
-    return new RedisPromise(this.adapter, this.commands, value => {
+    return new RedisPromise(this.adapter, this.commands, (value) => {
       return fn(originalTransform(value));
     });
   }

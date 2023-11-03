@@ -2,11 +2,21 @@
   "name": "redis-typed-keys",
   "version": "0.0.7",
   "description": "Typed Redis.",
-  "type": "module",
-  "main": "dist/bundle.js",
-  "module": "dist/bundle.js",
-  "types": "dist/index.d.ts",
+  "keywords": [
+    "redis"
+  ],
+  "homepage": "https://github.com/aantthony/redis-typed-keys#readme",
+  "bugs": {
+    "url": "https://github.com/aantthony/redis-typed-keys/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aantthony/redis-typed-keys.git"
+  },
+  "license": "MIT",
+  "author": "",
   "sideEffects": false,
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -14,36 +24,24 @@
       "require": "./dist/bundle.js"
     }
   },
+  "main": "dist/bundle.js",
+  "module": "dist/bundle.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rollup -c",
     "lint": "prettier . --write && eslint . --ext .ts --fix"
   },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
+  "prettier": "@vercel/style-guide/prettier",
   "devDependencies": {
-    "@types/node": "^20.8.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.3",
-    "@typescript-eslint/parser": "^6.7.3",
-    "eslint": "^8.50.0",
+    "@types/node": "^20.8.10",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
+    "@vercel/style-guide": "^5.0.1",
+    "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
     "prettier": "^3.0.3",
-    "rollup": "^3.29.4",
+    "rollup": "^4.2.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "typescript": "^5.2.2"
-  },
-  "prettier": {
-    "trailingComma": "all",
-    "singleQuote": true,
-    "arrowParens": "avoid",
-    "printWidth": 80
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/aantthony/redis-typed-keys.git"
-  },
-  "bugs": {
-    "url": "https://github.com/aantthony/redis-typed-keys/issues"
-  },
-  "homepage": "https://github.com/aantthony/redis-typed-keys#readme"
+  }
 }

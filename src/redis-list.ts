@@ -1,14 +1,18 @@
 import { RedisKey } from './key';
+import type { RedisPromise } from './promise';
 
 export class RedisList<T extends string> extends RedisKey {
-  lpush(entries: T[]) {
-    return this.op<number>('LPUSH', entries);
+  lpush(entries: T[]): RedisPromise<number> {
+    return this.op('LPUSH', entries);
   }
-  rpush(entries: T[]) {
-    return this.op<number>('RPUSH' as `L${string}`, entries);
+  rpush(entries: T[]): RedisPromise<number> {
+    return this.op('RPUSH' as `L${string}`, entries);
   }
-  lrange(start: number | undefined, stop: number | undefined) {
-    return this.op<T[]>('LRANGE', [
+  lrange(
+    start: number | undefined,
+    stop: number | undefined,
+  ): RedisPromise<T[]> {
+    return this.op('LRANGE', [
       start ? start.toString() : '0',
       stop ? stop.toString() : '-1',
     ]);

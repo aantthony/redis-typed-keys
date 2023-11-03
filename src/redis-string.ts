@@ -1,5 +1,6 @@
-import { RedisArg } from './adapter';
+import type { RedisArg } from './adapter';
 import { RedisKey } from './key';
+import type { RedisPromise } from './promise';
 
 export class RedisString<Value extends string = string> extends RedisKey {
   set(
@@ -14,7 +15,7 @@ export class RedisString<Value extends string = string> extends RedisKey {
       pxat?: number;
       keepttl?: boolean;
     },
-  ) {
+  ): RedisPromise<Value | null> {
     const args: RedisArg[] = [value];
     if (options?.nx) {
       args.push('NX');
@@ -37,15 +38,15 @@ export class RedisString<Value extends string = string> extends RedisKey {
       args.push('KEEPTTL');
     }
 
-    return this.op<Value | null>('SET', args);
+    return this.op('SET', args);
   }
-  get() {
-    return this.op<Value | null>('GET', []);
+  get(): RedisPromise<Value | null> {
+    return this.op('GET', []);
   }
-  incr() {
-    return this.op<number>('INCR', []);
+  incr(): RedisPromise<number> {
+    return this.op('INCR', []);
   }
-  incrby(count: number) {
-    return this.op<number>('INCRBY', [count.toString()]);
+  incrby(count: number): RedisPromise<number> {
+    return this.op('INCRBY', [count.toString()]);
   }
 }

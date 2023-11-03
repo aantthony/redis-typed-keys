@@ -1,9 +1,9 @@
-import { RedisAdapter, RedisArg, RedisReply } from './adapter';
+import type { RedisAdapter, RedisArg, RedisReply } from './adapter';
 import { RedisPromise } from './promise';
 
 export type RedisType = 'none' | 'string' | 'list' | 'set' | 'zset' | 'hash';
 
-const selectFirst = <T>(replies: RedisReply[]) => replies[0] as T;
+const selectFirst = <T>(replies: RedisReply[]): T => replies[0] as T;
 
 export class RedisKey {
   constructor(
@@ -15,55 +15,52 @@ export class RedisKey {
     op: string,
     args: RedisArg[],
     transformReply?: (res: RawReply) => Returned,
-  ) {
-    if (!this.adapter || !this.key) {
-      throw new Error('RedisKey not initialized');
-    }
+  ): RedisPromise<Returned> {
     const replyFn = transformReply;
     return new RedisPromise<Returned>(
       this.adapter,
       [[op, this.key, ...args]],
-      replyFn ? replies => replyFn(replies[0] as RawReply) : selectFirst,
+      replyFn ? (replies) => replyFn(replies[0] as RawReply) : selectFirst,
     );
   }
 
-  expire(seconds: number) {
-    return this.op<number>('EXPIRE', [seconds.toString()]);
+  expire(seconds: number): RedisPromise<number> {
+    return this.op('EXPIRE', [seconds.toString()]);
   }
-  expireat(timestamp: number) {
-    return this.op<number>('EXPIREAT', [timestamp.toString()]);
+  expireat(timestamp: number): RedisPromise<number> {
+    return this.op('EXPIREAT', [timestamp.toString()]);
   }
-  persist() {
-    return this.op<number>('PERSIST', []);
+  persist(): RedisPromise<number> {
+    return this.op('PERSIST', []);
   }
-  pexpire(milliseconds: number) {
-    return this.op<number>('PEXPIRE', [milliseconds.toString()]);
+  pexpire(milliseconds: number): RedisPromise<number> {
+    return this.op('PEXPIRE', [milliseconds.toString()]);
   }
-  pexpireat(timestamp: number) {
-    return this.op<number>('PEXPIREAT', [timestamp.toString()]);
+  pexpireat(timestamp: number): RedisPromise<number> {
+    return this.op('PEXPIREAT', [timestamp.toString()]);
   }
-  pttl() {
-    return this.op<number>('PTTL', []);
+  pttl(): RedisPromise<number> {
+    return this.op('PTTL', []);
   }
-  ttl() {
-    return this.op<number>('TTL', []);
+  ttl(): RedisPromise<number> {
+    return this.op('TTL', []);
   }
-  type() {
-    return this.op<RedisType>('TYPE', []);
+  type(): RedisPromise<RedisType> {
+    return this.op('TYPE', []);
   }
-  del() {
-    return this.op<number>('DEL', []);
+  del(): RedisPromise<number> {
+    return this.op('DEL', []);
   }
-  dump() {
-    return this.op<string>('DUMP', []);
+  dump(): RedisPromise<string> {
+    return this.op('DUMP', []);
   }
-  exists() {
-    return this.op<number>('EXISTS', []);
+  exists(): RedisPromise<number> {
+    return this.op('EXISTS', []);
   }
-  rename(newKey: RedisKey) {
-    return this.op<string>('RENAME', [newKey.key]);
+  rename(newKey: RedisKey): RedisPromise<string> {
+    return this.op('RENAME', [newKey.key]);
   }
-  renamenx(newKey: RedisKey) {
-    return this.op<number>('RENAMENX', [newKey.key]);
+  renamenx(newKey: RedisKey): RedisPromise<number> {
+    return this.op('RENAMENX', [newKey.key]);
   }
 }

@@ -1,4 +1,4 @@
-import { RedisAdapter } from '../adapter';
+import type { RedisAdapter } from '../adapter';
 import { createRestAdapater } from './rest';
 
 export function createUpstashAdapter(config: {

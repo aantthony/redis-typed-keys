@@ -1,30 +1,30 @@
-import { AllStrings } from './common-types';
+import type { AllStrings } from './common-types';
 import { decodeFieldValues } from './decode-field-values';
 import { RedisKey } from './key';
-import { RedisPromise } from './promise';
+import type { RedisPromise } from './promise';
 
-export type StreamEntry<Params> = {
+export interface StreamEntry<Params> {
   id: string;
 
   t: Date;
   seq: number;
 
   params: Params;
-};
+}
 
 export class RedisStream<
   T extends AllStrings<T> = Record<string, string>,
 > extends RedisKey {
   /**
    * Add a new entry to the stream.
-   * @link https://redis.io/commands/xadd
+   * {@link https://redis.io/commands/xadd}
    */
-  xadd(id: string | null, fields: T) {
+  xadd(id: string | null, fields: T): RedisPromise<string> {
     const args = [id || '*'];
     for (const [k, v] of Object.entries(fields)) {
       args.push(k, v as string);
     }
-    return this.op<string>('XADD', args);
+    return this.op('XADD', args);
   }
   xrange(q: {
     start?: string;

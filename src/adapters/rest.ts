@@ -1,4 +1,4 @@
-import { RedisAdapter, RedisErrorReply, RedisReply } from '../adapter';
+import type { RedisAdapter, RedisErrorReply, RedisReply } from '../adapter';
 
 interface UpstashReply {
   error?: string;
@@ -35,7 +35,7 @@ export function createRestAdapater(config: {
         const text = await res.text();
         throw new Error(`Upstash error: ${text}`);
       }
-      const json: UpstashReply[] = await res.json();
+      const json = (await res.json()) as UpstashReply[];
       return json.map(transformReply);
     },
   };

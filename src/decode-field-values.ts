@@ -1,4 +1,4 @@
-import { AllStrings } from './common-types';
+import type { AllStrings } from './common-types';
 
 export function decodeFieldValues<T extends AllStrings<T>>(pairs: string[]): T {
   const obj: Record<string, string> = {};

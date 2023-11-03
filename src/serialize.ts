@@ -1,6 +1,6 @@
 export type RedisValue = string | number | boolean;
 
-export function serialize(c: RedisValue) {
+export function serialize(c: RedisValue): string {
   if (typeof c === 'string') {
     return c;
   }

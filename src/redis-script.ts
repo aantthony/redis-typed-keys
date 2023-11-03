@@ -1,12 +1,13 @@
-import { RedisKey } from './key';
+import type { RedisKey } from './key';
 import { RedisPromise } from './promise';
-import { RedisValue, serialize } from './serialize';
+import type { RedisValue } from './serialize';
+import { serialize } from './serialize';
 
 export class RedisScript<Keys extends RedisKey[], Args extends RedisValue[]> {
   constructor(public readonly source: string) {}
-  eval(keys: Keys, args: Args) {
+  eval<T>(keys: Keys, args: Args): RedisPromise<T> {
     // use the server based on the first key
-    const firstKey = keys[0];
+    const firstKey = keys.at(0);
     if (!firstKey) throw new Error('no keys provided to eval');
 
     return new RedisPromise(firstKey.adapter, [
@@ -14,7 +15,7 @@ export class RedisScript<Keys extends RedisKey[], Args extends RedisValue[]> {
         'EVAL',
         this.source,
         keys.length.toString(),
-        ...keys.map(k => k.key),
+        ...keys.map((k) => k.key),
         ...args.map(serialize),
       ],
     ]);

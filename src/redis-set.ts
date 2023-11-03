@@ -1,10 +1,11 @@
 import { RedisKey } from './key';
+import type { RedisPromise } from './promise';
 
 export class RedisSet<T extends string> extends RedisKey {
-  sadd(entries: T[]) {
-    return this.op<number>('SADD', entries);
+  sadd(entries: T[]): RedisPromise<number> {
+    return this.op('SADD', entries);
   }
-  smembers() {
-    return this.op<T[]>('SMEMBERS', [], res => res);
+  smembers(): RedisPromise<T[]> {
+    return this.op('SMEMBERS', []);
   }
 }
