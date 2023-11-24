@@ -29,7 +29,10 @@ const nextValue = await myCounter.op<number>('INCR', []); // same as above
 ```ts
 import { Schema, createVercelKvAdapter, multi, pipeline } from 'tredis';
 
-const t = new Schema(createVercelKvAdapter());
+const t = new Schema(createVercelKvAdapter({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+}));
 
 interface StoredUser {
   name: string;
