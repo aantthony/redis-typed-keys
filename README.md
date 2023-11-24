@@ -13,8 +13,11 @@ It doesn't do automatic JSON deserialization that's common in other libraries. I
 Simple example:
 
 ```ts
-import { Schema, createVercelKvAdapter } from 'tredis';
-const t = new Schema(createVercelKvAdapter());
+import { Schema, createVercelKvAdapter } from 'redis-typed-keys';
+const t = new Schema(createVercelKvAdapter({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+}));
 
 // use a string key called 'myCounter'
 const myCounter = t.string('myCounter');
@@ -27,7 +30,7 @@ const nextValue = await myCounter.op<number>('INCR', []); // same as above
 ## Detailed Usage:
 
 ```ts
-import { Schema, createVercelKvAdapter, multi, pipeline } from 'tredis';
+import { Schema, createVercelKvAdapter, multi, pipeline } from 'redis-typed-keys';
 
 const t = new Schema(createVercelKvAdapter({
   url: process.env.KV_REST_API_URL,
