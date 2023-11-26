@@ -14,14 +14,14 @@ export function createRestAdapater(config: {
   url?: string;
   token?: string;
 }): RedisAdapter {
-  if (!config.url) throw new Error('Missing url');
-  if (!config.token) throw new Error('Missing token');
-
   const pipelineEndpoint = `${config.url}/pipeline`;
   const multiEndpoint = `${config.url}/multi-exec`;
 
   return {
     async send(commands, opts) {
+      if (!config.url) throw new Error('Missing url');
+      if (!config.token) throw new Error('Missing token');
+
       const isMulti = opts.multi;
       const res = await fetch(isMulti ? multiEndpoint : pipelineEndpoint, {
         method: 'POST',

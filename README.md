@@ -14,10 +14,7 @@ Simple example:
 
 ```ts
 import { Schema, createVercelKvAdapter } from 'redis-typed-keys';
-const t = new Schema(createVercelKvAdapter({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
-}));
+const t = new Schema(createVercelKvAdapter());
 
 // use a string key called 'myCounter'
 const myCounter = t.string('myCounter');
@@ -30,12 +27,19 @@ const nextValue = await myCounter.op<number>('INCR', []); // same as above
 ## Detailed Usage:
 
 ```ts
-import { Schema, createVercelKvAdapter, multi, pipeline } from 'redis-typed-keys';
+import {
+  Schema,
+  createVercelKvAdapter,
+  multi,
+  pipeline,
+} from 'redis-typed-keys';
 
-const t = new Schema(createVercelKvAdapter({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
-}));
+const t = new Schema(
+  createVercelKvAdapter({
+    url: process.env.KV_REST_API_URL,
+    token: process.env.KV_REST_API_TOKEN,
+  }),
+);
 
 interface StoredUser {
   name: string;
