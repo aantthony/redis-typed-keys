@@ -29,7 +29,7 @@ export function createRestAdapater(config: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${config.token}`,
         },
-        body: JSON.stringify(commands),
+        body: JSON.stringify(commands.map((c) => c.args)),
       });
       if (!res.ok) {
         const text = await res.text();

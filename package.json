@@ -22,10 +22,30 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/bundle.js",
       "require": "./dist/bundle.js"
+    },
+    "./node-redis-cluster": {
+      "types": "./dist/adapters/node-redis-cluster.d.ts",
+      "import": "./dist/node-redis-cluster.js",
+      "require": "./dist/node-redis-cluster.js"
+    },
+    "./node-redis": {
+      "types": "./dist/adapters/node-redis.d.ts",
+      "import": "./dist/node-redis.js",
+      "require": "./dist/node-redis.js"
+    },
+    "./vercel-kv": {
+      "types": "./dist/adapters/vercel-kv.d.ts",
+      "import": "./dist/vercel-kv.js",
+      "require": "./dist/vercel-kv.js"
+    },
+    "./upstash": {
+      "types": "./dist/adapters/upstash.d.ts",
+      "import": "./dist/upstash.js",
+      "require": "./dist/upstash.js"
     }
   },
-  "main": "dist/bundle.js",
-  "module": "dist/bundle.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rollup -c",
@@ -33,14 +53,15 @@
   },
   "prettier": "@vercel/style-guide/prettier",
   "devDependencies": {
-    "@types/node": "^20.10.0",
-    "@typescript-eslint/eslint-plugin": "^6.12.0",
-    "@typescript-eslint/parser": "^6.12.0",
+    "@redis/client": "^1.5.12",
+    "@types/node": "^20.10.2",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
     "@vercel/style-guide": "^5.1.0",
-    "eslint": "^8.54.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.1.0",
-    "rollup": "^4.5.2",
+    "rollup": "^4.6.1",
     "rollup-plugin-typescript2": "^0.36.0",
     "typescript": "^5.3.2"
   }

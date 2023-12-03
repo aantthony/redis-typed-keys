@@ -14,6 +14,7 @@ Simple example:
 
 ```ts
 import { Schema, createVercelKvAdapter } from 'redis-typed-keys';
+import { createVercelKvAdapter } from 'redis-typed-keys/vercel-kv';
 const t = new Schema(createVercelKvAdapter());
 
 // use a string key called 'myCounter'
@@ -29,13 +30,13 @@ const nextValue = await myCounter.op<number>('INCR', []); // same as above
 ```ts
 import {
   Schema,
-  createVercelKvAdapter,
   multi,
   pipeline,
 } from 'redis-typed-keys';
+import { createVercelKvAdapter } from 'redis-typed-keys/vercel-kv';
 
 const t = new Schema(
-  createVercelKvAdapter({
+  async () => createVercelKvAdapter({
     url: process.env.KV_REST_API_URL,
     token: process.env.KV_REST_API_TOKEN,
   }),
@@ -90,6 +91,15 @@ Many of the commands haven't been added yet. For those, either create a pull req
 
 ## Supported connections:
 
-- Vercel KV: `createVercelKvAdapter`
-- Upstash: `createUpstashAdapter`
-- node-redis: `createNodeRedisAdapter({ client: redisClient, ErrorReply })` (ErrorReply is needed for correct error handling)
+```ts
+import { createVercelKvAdapter } from 'redis-typed-keys/vercel-kv';
+import { createUpstashAdapter } from 'redis-typed-keys/upstash';
+import { createNodeRedisAdapter } from 'redis-typed-keys/node-redis';
+import { createNodeRedisClusterAdapter } from 'redis-typed-keys/node-redis-cluster';
+
+// Usage:
+createNodeRedisAdapter({ client: createClient(...), ErrorReply });
+createNodeRedisClusterAdapter({ cluster: createCluster({...}), ErrorReply });
+createVercelKvAdapter({ url, token }); // optional, defaults to process.env.KV_REST_API_URL and KV_REST_API_TOKEN
+createUpstashAdapter({ url, token }); // optional, defaults to process.env.UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN
+```

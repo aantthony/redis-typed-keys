@@ -11,6 +11,3 @@ export * from './redis-sorted';
 export * from './redis-stream';
 export * from './redis-string';
 export * from './schema';
-export * from './adapters/vercel';
-export * from './adapters/upstash';
-export * from './adapters/node-redis';

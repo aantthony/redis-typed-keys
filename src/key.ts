@@ -1,4 +1,4 @@
-import type { RedisAdapter, RedisArg, RedisReply } from './adapter';
+import type { Cmd, RedisAdapter, RedisArg, RedisReply } from './adapter';
 import { RedisPromise } from './promise';
 
 export type RedisType = 'none' | 'string' | 'list' | 'set' | 'zset' | 'hash';
@@ -17,9 +17,13 @@ export class RedisKey {
     transformReply?: (res: RawReply) => Returned,
   ): RedisPromise<Returned> {
     const replyFn = transformReply;
+    const cmd: Cmd = {
+      firstKey: this.key,
+      args: [op, this.key, ...args],
+    };
     return new RedisPromise<Returned>(
       this.adapter,
-      [[op, this.key, ...args]],
+      [cmd],
       replyFn ? (replies) => replyFn(replies[0] as RawReply) : selectFirst,
     );
   }

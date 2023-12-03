@@ -13,9 +13,14 @@ export type RedisReply =
 
 export type RedisArg = string | Buffer;
 
+export interface Cmd {
+  firstKey: string;
+  args: RedisArg[];
+}
+
 export interface RedisAdapter {
   send: (
-    commands: RedisArg[][],
+    commands: Cmd[],
     opts: {
       multi?: boolean;
     },

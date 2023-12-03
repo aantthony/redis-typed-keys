@@ -10,11 +10,38 @@ import { RedisStream } from './redis-stream';
 import { RedisString } from './redis-string';
 import type { RedisValue } from './serialize';
 
+export type RedisAdapterFactory = () => Promise<RedisAdapter> | RedisAdapter;
+
+function createLazyAdapter(adapterFactory: RedisAdapterFactory): RedisAdapter {
+  let adapterPromise: Promise<RedisAdapter> | RedisAdapter | null = null;
+
+  function getAdapter(): Promise<RedisAdapter> | RedisAdapter {
+    if (adapterPromise === null) {
+      adapterPromise = adapterFactory();
+    }
+    return adapterPromise;
+  }
+
+  return {
+    async send(commands, opts) {
+      const adapter = await getAdapter();
+      return adapter.send(commands, opts);
+    },
+  };
+}
+
 export class Schema {
+  adapter: RedisAdapter;
   constructor(
-    public readonly adapter: RedisAdapter,
+    adapter: RedisAdapter | RedisAdapterFactory,
     public readonly prefix = '',
-  ) {}
+  ) {
+    if (typeof adapter === 'function') {
+      this.adapter = createLazyAdapter(adapter);
+    } else {
+      this.adapter = adapter;
+    }
+  }
   /**
    * Generic untyped key
    */

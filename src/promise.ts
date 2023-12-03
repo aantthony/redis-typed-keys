@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method -- it doesnt use this for static methods */
-import type { RedisAdapter, RedisArg, RedisReply } from './adapter';
+import type { Cmd, RedisAdapter, RedisReply } from './adapter';
 
 export type InferCmdResponses<T extends unknown[]> = {
   [K in keyof T]: T[K] extends RedisPromise<infer TData> ? TData : never;
@@ -8,7 +8,7 @@ export type InferCmdResponses<T extends unknown[]> = {
 export class RedisPromise<Returned = unknown> implements Promise<Returned> {
   public constructor(
     private readonly adapter: RedisAdapter,
-    private readonly commands: RedisArg[][],
+    private readonly commands: Cmd[],
     private readonly transformFn: (replies: RedisReply[]) => Returned = (
       value,
     ) => value as Returned,

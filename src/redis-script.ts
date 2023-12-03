@@ -11,13 +11,16 @@ export class RedisScript<Keys extends RedisKey[], Args extends RedisValue[]> {
     if (!firstKey) throw new Error('no keys provided to eval');
 
     return new RedisPromise(firstKey.adapter, [
-      [
-        'EVAL',
-        this.source,
-        keys.length.toString(),
-        ...keys.map((k) => k.key),
-        ...args.map(serialize),
-      ],
+      {
+        firstKey: firstKey.key,
+        args: [
+          'EVAL',
+          this.source,
+          keys.length.toString(),
+          ...keys.map((k) => k.key),
+          ...args.map(serialize),
+        ],
+      },
     ]);
   }
 }

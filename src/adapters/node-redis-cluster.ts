@@ -1,8 +1,8 @@
-import type { createClient, ErrorReply } from '@redis/client';
+import type { createCluster, ErrorReply } from '@redis/client';
 import type { RedisAdapter, RedisReply } from '../adapter';
 
-export function createNodeRedisAdapter(params: {
-  client: ReturnType<typeof createClient>;
+export function createNodeRedisClusterAdapter(params: {
+  cluster: ReturnType<typeof createCluster>;
   ErrorReply: typeof ErrorReply;
 }): RedisAdapter {
   const transformReply = (res: unknown): RedisReply => {
@@ -15,13 +15,14 @@ export function createNodeRedisAdapter(params: {
 
   return {
     async send(commands, opts) {
-      const pipeline = params.client.multi();
+      const pipeline = params.cluster.multi();
 
       for (const cmd of commands) {
-        pipeline.addCommand(cmd.args, transformReply);
+        pipeline.addCommand(cmd.firstKey, cmd.args, transformReply);
       }
 
       if (opts.multi) {
+        // Perhaps we should assert the the keys are all in the same slot?
         return pipeline.exec(false);
       }
 
