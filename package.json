@@ -1,6 +1,6 @@
 {
   "name": "redis-typed-keys",
-  "version": "0.2.0-alpha.2",
+  "version": "0.2.0",
   "description": "Typed Redis.",
   "keywords": [
     "redis"
