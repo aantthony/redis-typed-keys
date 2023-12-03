@@ -20,8 +20,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/bundle.js",
-      "require": "./dist/bundle.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
     },
     "./node-redis-cluster": {
       "types": "./dist/adapters/node-redis-cluster.d.ts",
@@ -44,9 +44,6 @@
       "require": "./dist/upstash.js"
     }
   },
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rollup -c",
     "lint": "prettier . --write && eslint . --ext .ts --fix"
