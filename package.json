@@ -44,6 +44,9 @@
       "require": "./dist/upstash.js"
     }
   },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rollup -c",
     "lint": "prettier . --write && eslint . --ext .ts --fix"
