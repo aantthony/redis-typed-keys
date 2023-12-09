@@ -49,7 +49,7 @@ export class RedisHash<
     return this.op('hdel', fields as string[]);
   }
 
-  hsetnx<K extends keyof T>(field: K, value: T[K]): RedisPromise<number> {
+  hsetnx<K extends keyof T>(field: K, value: T[K] & string): RedisPromise<number> {
     return this.op('hsetnx', [field as string, value]);
   }
 
@@ -84,5 +84,24 @@ export class RedisHash<
 
       return [cursor, pairs];
     });
+  }
+
+  hvals(): RedisPromise<T[keyof T][]> {
+    return this.op('hvals', []);
+  }
+
+  hstrlen<K extends keyof T>(field: K): RedisPromise<number> {
+    return this.op('hstrlen', [field as string]);
+  }
+
+  hexists<K extends keyof T>(field: K): RedisPromise<number> {
+    return this.op('hexists', [field as string]);
+  }
+
+  hincrbyfloat<K extends keyof T>(
+    field: K,
+    increment: number,
+  ): RedisPromise<number> {
+    return this.op('hincrbyfloat', [field as string, increment.toString()]);
   }
 }

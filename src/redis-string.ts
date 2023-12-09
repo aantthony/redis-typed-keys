@@ -49,4 +49,36 @@ export class RedisString<Value extends string = string> extends RedisKey {
   incrby(count: number): RedisPromise<number> {
     return this.op('INCRBY', [count.toString()]);
   }
+
+  decr(): RedisPromise<number> {
+    return this.op('DECR', []);
+  }
+
+  decrby(count: number): RedisPromise<number> {
+    return this.op('DECRBY', [count.toString()]);
+  }
+
+  append(value: RedisArg): RedisPromise<number> {
+    return this.op('APPEND', [value]);
+  }
+
+  strlen(): RedisPromise<number> {
+    return this.op('STRLEN', []);
+  }
+
+  setrange(offset: number, value: RedisArg): RedisPromise<number> {
+    return this.op('SETRANGE', [offset.toString(), value]);
+  }
+
+  getrange(start: number, end: number): RedisPromise<string> {
+    return this.op('GETRANGE', [start.toString(), end.toString()]);
+  }
+
+  setbit(offset: number, value: RedisArg): RedisPromise<number> {
+    return this.op('SETBIT', [offset.toString(), value]);
+  }
+
+  getbit(offset: number): RedisPromise<number> {
+    return this.op('GETBIT', [offset.toString()]);
+  }
 }
