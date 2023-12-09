@@ -7,12 +7,18 @@ export type InferCmdResponses<T extends unknown[]> = {
 
 export class RedisPromise<Returned = unknown> implements Promise<Returned> {
   public constructor(
-    private readonly adapter: RedisAdapter,
+    private readonly adapter: RedisAdapter | undefined,
     private readonly commands: Cmd[],
     private readonly transformFn: (replies: RedisReply[]) => Returned = (
       value,
     ) => value as Returned,
-  ) {}
+  ) {
+    if (commands.length && !adapter) {
+      throw new Error(
+        'Cannot create a RedisPromise without an adapter if commands are provided',
+      );
+    }
+  }
 
   wantsMulti = false;
 
@@ -24,7 +30,8 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
     if (this._promise === null) {
       this._promise = (
         this.commands.length
-          ? this.adapter.send(this.commands, {
+          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- we know it's not null
+            this.adapter!.send(this.commands, {
               multi: this.wantsMulti,
             })
           : Promise.resolve([])
@@ -50,12 +57,7 @@ export class RedisPromise<Returned = unknown> implements Promise<Returned> {
   static pipeline<P extends (null | undefined | RedisPromise)[]>(
     promises: [...P],
   ): RedisPromise<InferCmdResponses<P>> {
-    const first = promises.find((p) => Boolean(p));
-    if (!first) {
-      throw new Error('no promises provided to pipeline');
-    }
-
-    const adapter = first.adapter;
+    const adapter = promises.find((p) => p?.adapter)?.adapter;
     const commands = promises.flatMap((p) => (p ? p.commands : []));
 
     const transform = (flatReplies: RedisReply[]): InferCmdResponses<P> => {
